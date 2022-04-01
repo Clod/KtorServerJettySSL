@@ -1,0 +1,57 @@
+Pido los certificados en ZeroSSL (en la página de Ktor sugieren otro)
+
+https://help.zerossl.com/hc/en-us/articles/360058296034-Certificate-Format
+
+ZeroSSL by default supplies certificates in PEM format.
+
+----------------------------------------------------------------------------------------------
+Meter los certificados en le keystore:
+
+1) Concateno el público y el bundle:
+
+    Get-Content certificate.crt, ca_bundle.crt | Set-Content full_chain.crt
+
+2) Le cambio el formato (y de algún modo se ve que meto la clave privada también)
+
+    openssl pkcs12 -export -in full_chain.crt -inkey private.key -out keystore.p12 -name "vcsinc"
+
+3) Creo el keystore y meto los certificados:
+
+    keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -destkeystore test.jks
+
+4) Para ver el contenido de un keystore:
+
+PS D:\home\Kotlin\Ktor\embedded_ssl_server\build> keytool -v -list -keystore test.jks
+
+Para poder probar edito el hosts:
+
+        c:\Windows\System32\Drivers\etc\hosts
+
+y le agrego al final:
+
+        127.0.0.1 vcsinc.com.ar
+
+5) Pruebo con https://vcsinc.com.ar:8443/ en los navegadores y ¡¡¡¡¡anda!!!!!
+
+
+--------------------------------------------------------------------------------------------------------
+ME queda pendiente ver.
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12".
+
+Differences between "BEGIN RSA PRIVATE KEY" and "BEGIN PRIVATE KEY"
+https://stackoverflow.com/questions/20065304/differences-between-begin-rsa-private-key-and-begin-private-key
+
+Buen tutorial sobre SSL:
+
+https://www.tutorialsteacher.com/https/openssl-certificate-convert-commands
+
+http://www.steves-internet-guide.com/ssl-certificates-explained/
+
+Proveedor gratuito:
+
+https://letsencrypt.org/getting-started/
+
+Steps to create a .jks keystore using .key and .crt files...
+
+https://blogs.oracle.com/blogbypuneeth/post/steps-to-create-a-jks-keystore-using-key-and-crt-files

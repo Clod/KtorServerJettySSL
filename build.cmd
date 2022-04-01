@@ -1,0 +1,2 @@
+native-image --trace-class-initialization=ch.qos.logback.classic.Logger --initialize-at-run-time=org.slf4j.impl.StaticLoggerBinder --no-fallback --enable-all-security-services --report-unsupported-elements-at-runtime --install-exit-handlers --allow-incomplete-classpath --initialize-at-build-time=io.ktor,kotlinx,kotlin,org.slf4j -H:+ReportUnsupportedElementsAtRuntime -H:+ReportExceptionStackTraces -H:ReflectionConfigurationFiles=./reflection.json -cp ./build/libs/embedded_ssl_server-1.0-SNAPSHOT-all.jar -H:Class=com.example.ApplicationKt  -H:Name=graal-server
+
